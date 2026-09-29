@@ -1566,6 +1566,18 @@
             <breakiterator>true</breakiterator>
             <quiet>true</quiet>
             <additionalparam>${javadoc.additional.params}</additionalparam>
+            <!-- Use classpath mode instead of JPMS module-path mode.
+                 gwt-user embeds .java sources referencing gwt-dev internals (GWTBridge,
+                 GwtScriptOnly) and errai jars use cross-jar service registrations; both
+                 cause javadoc to fail in JPMS module-path mode (default since 3.11+).
+                 legacyMode=true keeps javadoc on the classpath, matching pre-JPMS behaviour. -->
+            <legacyMode>true</legacyMode>
+            <!-- GWT and Errai JARs embed .java sources alongside compiled classes; javadoc
+                 follows type references into those embedded sources and fails when their
+                 transitive provided-scope dependencies (gwt-dev, Eclipse JDT) are absent.
+                 failOnError=false converts those exit-code-1 errors to warnings so the
+                 javadoc jar is still produced for the project's own public API. -->
+            <failOnError>false</failOnError>
           </configuration>
         </plugin>
         <plugin>
