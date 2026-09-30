@@ -20,12 +20,10 @@
   <properties>
     <!-- Narayana 7.0.0+ is Jakarta EE 10 compatible -->
     <version.org.jboss.jbossts.jta>7.0.2.Final</version.org.jboss.jbossts.jta>
-    <!-- Tomcat integration with Narayana -->
-    <version.org.jboss.integration.narayana-tomcat>2.0.0.Final</version.org.jboss.integration.narayana-tomcat>
     <!-- narayana dependencies for tomcat and kie server -->
     <version.org.jboss.narayana.tomcat>7.0.2.Final</version.org.jboss.narayana.tomcat>
     <!-- DBCP connection pooling for Narayana -->
-    <version.org.apache.tomcat.tomcat-dbcp>10.1.34</version.org.apache.tomcat.tomcat-dbcp>
+    <version.org.apache.tomcat.tomcat-dbcp>10.1.60</version.org.apache.tomcat.tomcat-dbcp>
 
     <version.org.jboss.transaction.spi>7.6.1.Final</version.org.jboss.transaction.spi>
     <version.jakarta.transaction-api>2.0.1</version.jakarta.transaction-api>
@@ -38,21 +36,14 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.jboss.jbossts.jta</groupId>
-        <artifactId>narayana-jta</artifactId>
+        <groupId>org.jboss.narayana.jta</groupId>
+        <artifactId>jta</artifactId>
         <version>${version.org.jboss.jbossts.jta}</version>
       </dependency>
-      <!-- Integration between Tomcat and Narayana -->
       <dependency>
-        <groupId>org.jboss.integration</groupId>
-        <artifactId>narayana-tomcat</artifactId>
-        <version>${version.org.jboss.integration.narayana-tomcat}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.jboss</groupId>
-            <artifactId>jboss-transaction-spi</artifactId>
-          </exclusion>
-        </exclusions>
+        <groupId>org.jboss.narayana.jta</groupId>
+        <artifactId>jdbc</artifactId>
+        <version>${version.org.jboss.jbossts.jta}</version>
       </dependency>
 
       <dependency>
