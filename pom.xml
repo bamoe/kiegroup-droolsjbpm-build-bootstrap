@@ -65,7 +65,7 @@
     <version.commons-fileupload>2.0.0-M5</version.commons-fileupload>
     <version.commons-jxpath>1.3</version.commons-jxpath>
     <version.commons-logging>1.1.1</version.commons-logging>
-    <version.commons-net>2.2</version.commons-net>
+    <version.commons-net>3.12.0</version.commons-net>
     <version.commons-pool>1.6</version.commons-pool>
     <version.commons-io>2.20.0</version.commons-io>
     <version.common-text>1.10.0</version.common-text>
@@ -332,7 +332,7 @@
     <version.org.antlr4>4.10.1</version.org.antlr4>
     <!-- CXF's version is aligned with Jetty -->
     <version.org.apache.cxf>4.1.7</version.org.apache.cxf>
-    <version.org.apache.camel>2.25.4</version.org.apache.camel>
+    <version.org.apache.camel>4.18.4</version.org.apache.camel>
     <version.org.codehaus.cargo>1.9.3</version.org.codehaus.cargo>
     <version.org.freemarker>2.3.30</version.org.freemarker>
     <!-- Dependencies for selenium tests -->
@@ -464,7 +464,7 @@
     <version.org.jboss.jandex>3.2.7</version.org.jboss.jandex>
     <version.jandex.plugin>3.2.7</version.jandex.plugin>
     <version.org.eclipse.yasson>3.0.4</version.org.eclipse.yasson>
-    <version.com.sun.xml.messaging.saaj>1.5.0</version.com.sun.xml.messaging.saaj>
+    <version.com.sun.xml.messaging.saaj>3.0.4</version.com.sun.xml.messaging.saaj>
 
 
     <version.io.prometheus>0.5.0</version.io.prometheus>
@@ -5792,25 +5792,21 @@
         <artifactId>camel-core</artifactId>
         <version>${version.org.apache.camel}</version>
       </dependency>
+      <!-- camel-test renamed to camel-test-junit5 in Camel 3+ -->
       <dependency>
         <groupId>org.apache.camel</groupId>
-        <artifactId>camel-test</artifactId>
+        <artifactId>camel-test-junit5</artifactId>
+        <version>${version.org.apache.camel}</version>
+      </dependency>
+      <!-- camel-cxf split into camel-cxf-soap + camel-cxf-rest in Camel 4 -->
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-cxf-soap</artifactId>
         <version>${version.org.apache.camel}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.camel</groupId>
-        <artifactId>camel-cxf</artifactId>
-        <version>${version.org.apache.camel}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-xstream</artifactId>
+        <artifactId>camel-cxf-rest</artifactId>
         <version>${version.org.apache.camel}</version>
       </dependency>
       <dependency>
@@ -5818,20 +5814,16 @@
         <artifactId>camel-jaxb</artifactId>
         <version>${version.org.apache.camel}</version>
       </dependency>
+      <!-- javax.servlet exclusions removed — camel-cxf-transport 4.x is Jakarta-native -->
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-cxf-transport</artifactId>
         <version>${version.org.apache.camel}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
+      <!-- camel-test-spring renamed to camel-test-spring-junit5 in Camel 3+ -->
       <dependency>
         <groupId>org.apache.camel</groupId>
-        <artifactId>camel-test-spring</artifactId>
+        <artifactId>camel-test-spring-junit5</artifactId>
         <version>${version.org.apache.camel}</version>
       </dependency>
 
