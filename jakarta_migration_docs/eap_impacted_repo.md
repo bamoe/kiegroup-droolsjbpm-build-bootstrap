@@ -10,28 +10,28 @@ All version properties below live in [`droolsjbpm-build-bootstrap/pom.xml`](../p
 
 | Property | Current | Required | Risk |
 |---|---|---|---|
-| `version.org.infinispan` | 14.0.27.Final | **15.0.x.Final** | API changes in cluster/cache config |
-| `version.io.undertow` | 2.2.38.Final | **2.3.x.Final** | SPI changes in request handlers |
-| `version.org.keycloak` | 20.0.3 | **24.0.x** | Legacy WF adapter removed → OIDC only |
-| `version.jakarta.persistence-api` | 3.1.0 | **3.2.0** | `SequenceGenerator` / `IdClass` API deltas |
-| `version.jakarta.enterprise.cdi-api` | 4.0.1 | **4.1.0** | Minor — `@Produces` resolution edge-cases |
-| `version.jakarta.websocket-api` | 2.1.1 | **2.2.0** | Minor API additions |
-| `version.jakarta.enterprise.concurrent-api` | 3.0.4 | **3.1.0** | Minor — `ContextServiceDefinition` changes |
-| `version.jakarta.security.jacc-api` | 1.6.1 (EE 8) | **3.0.0** (`jakarta.authorization-api`) | Package rename + API overhaul |
-| `version.bootable` (wildfly-jar-maven-plugin) | 6.1.2.Final | **13.0.x.Final** | Plugin config syntax changed for EAP 8 |
-| `wildfly-maven-plugin` (pluginManagement) | 1.2.0.Final | **5.0.x.Final** | Goal renames; `execute-commands` changed |
+| `version.org.infinispan` | ~~14.0.27.Final~~ → **15.0.20.Final** | **15.0.x.Final** | ✅ Done |
+| `version.io.undertow` | ~~2.2.38.Final~~ → **2.3.24.Final** | **2.3.x.Final** | ✅ Done |
+| `version.org.keycloak` | ~~20.0.3~~ → **26.6.4** | **24.0.x** | ✅ Done (upgraded past 24.x) |
+| `version.jakarta.persistence-api` | **3.1.0** | **3.2.0** | ⚠️ Still at 3.1.0 — consider upgrading to align with EAP 8.1 |
+| `version.jakarta.enterprise.cdi-api` | ~~4.0.1~~ → **4.1.0** | **4.1.0** | ✅ Done |
+| `version.jakarta.websocket-api` | ~~2.1.1~~ → **2.2.0** | **2.2.0** | ✅ Done |
+| `version.jakarta.enterprise.concurrent-api` | ~~3.0.4~~ → **3.1.1** | **3.1.0** | ✅ Done |
+| `version.jakarta.authorization.api` | ~~absent~~ → **3.0.0** | **3.0.0** (`jakarta.authorization-api`) | ✅ Done (property `version.jakarta.authorization.api`) |
+| `version.wildfly.jar.maven.plugin` (bootable) | ~~6.1.2.Final~~ → **13.0.0.Final** | **13.0.x.Final** | ✅ Done |
+| `wildfly-maven-plugin` (pluginManagement) | ~~1.2.0.Final~~ → **5.1.5.Final** | **5.0.x.Final** | ✅ Done |
 
 ---
 
 ## 2. Spring Upgrade — `droolsjbpm-integration` + `droolsjbpm-knowledge` + `jbpm-work-items`
 
-Spring Boot 2.x uses `javax.*`; EAP 8.1 requires Spring Boot 3.x (`jakarta.*`).
+Spring Boot 3.x with `jakarta.*` namespaces is now in use. All three upgrades are complete.
 
-| Property | Current | Required |
-|---|---|---|
-| `version.org.springframework.boot` | 2.7.18 | **3.3.x** |
-| `version.org.springframework` | 5.3.39 | **6.1.x** |
-| `version.org.springframework.security.web` | 5.7.14 | **6.3.x** |
+| Property | Previous | Current | Status |
+|---|---|---|---|
+| `version.org.springframework.boot` | 2.7.18 | **3.5.16** | ✅ Done |
+| `version.org.springframework` | 5.3.39 | **6.2.19** | ✅ Done |
+| `version.org.springframework.security.web` | 5.7.14 | **6.5.11** | ✅ Done |
 
 **Affected modules** (own Spring Boot usage):
 
@@ -59,9 +59,9 @@ Spring Boot 2.x uses `javax.*`; EAP 8.1 requires Spring Boot 3.x (`jakarta.*`).
 
 | File | Change | Detail |
 |---|---|---|
-| `process-migration-service/pom.xml` | Bump `version.org.wildfly` | `23.0.2.Final` → **`35.0.1.Final`** |
-| `process-migration-service/pom.xml` | Update Cargo container ID | `wildfly23x` → **`wildfly35x`** |
-| `process-migration-service/pom.xml` | Update Arquillian container | Ensure `wildfly-arquillian-container` = `5.1.0.Final` |
+| `process-migration-service/pom.xml` | `version.org.wildfly` | ✅ Done — now `35.0.1.Final` |
+| `process-migration-service/pom.xml` | Cargo container ID | ✅ Done — now `wildfly35x` |
+| `process-migration-service/pom.xml` | Arquillian container | ✅ Done — `wildfly-arquillian-container` at `5.1.0.Final` |
 
 **Breaking changes:** WildFly 35 subsystem XML schemas differ; any `standalone.xml` / `domain.xml` snippets in integration tests must be reviewed.
 
@@ -82,9 +82,9 @@ Spring Boot 2.x uses `javax.*`; EAP 8.1 requires Spring Boot 3.x (`jakarta.*`).
 
 | Risk | Detail |
 |---|---|
-| 🔴 **High** | `org.jboss.errai` 4.19.0-SNAPSHOT has no Jakarta EE 10 / CDI 4.x release |
-| Code-level | `@Inject`, `@Portable`, `@Dependent` Errai equivalents may not bind with CDI 4.1 |
-| GWT integration | Errai's GWT-CDI bridge is effectively abandoned |
+| 🔴 **High** | `org.jboss.errai` is now at `5.0.0-SNAPSHOT` (Jakarta EE 10 / CDI 4.x target), but remains a SNAPSHOT |
+| Code-level | `@Inject`, `@Portable`, `@Dependent` Errai equivalents — ongoing compatibility work with CDI 4.1 |
+| GWT integration | Errai's GWT-CDI bridge stability under Errai 5.x / CDI 4.1 should be verified through build/test runs |
 
 **Affected repos** (all repos importing `jboss.errai`): `kie-wb-common`, `appformer`, `drools-wb`, `jbpm-wb`, `kie-wb-distributions`, `kie-uberfire-extensions`.
 
@@ -108,9 +108,9 @@ Spring Boot 2.x uses `javax.*`; EAP 8.1 requires Spring Boot 3.x (`jakarta.*`).
 
 | Risk | Detail |
 |---|---|
-| 🔴 **High** | Keycloak 24.x removed the legacy WildFly adapter (`keycloak-wildfly-adapter`) |
-| Required action | Migrate to `keycloak-servlet-oauth-client` or configure native OIDC in Elytron |
-| `jboss-deployment-structure.xml` | Remove `org.keycloak.keycloak-adapter-subsystem` dependency |
+| ⚠️ Verify | Keycloak upgraded to `26.6.4`; legacy WildFly adapter was removed from Keycloak 24+ |
+| Required action | Verify migration to `keycloak-servlet-oauth-client` or native OIDC in Elytron is complete |
+| `jboss-deployment-structure.xml` | Verify `org.keycloak.keycloak-adapter-subsystem` dependency has been removed |
 
 ---
 
@@ -129,16 +129,18 @@ Applies to `kie-wb-distributions`, `droolsjbpm-integration`, `jbpm-wb`, `kie-wb-
 
 ## Summary Matrix
 
-| Repository | POM change needed | Code-level breaking change | Severity |
+> **Status updated**: most POM changes are now complete. Remaining open items are noted below.
+
+| Repository | POM change status | Code-level breaking change | Severity |
 |---|---|---|---|
-| `droolsjbpm-build-bootstrap` | 10 version property bumps (see §1) | None (BOM only) | Medium |
-| `droolsjbpm-integration` | Spring Boot 3.x; Camel removal | Namespace, Security API, Camel subsystem | 🔴 High |
-| `droolsjbpm-knowledge` | Spring Boot 3.x (archetype) | Archetype template `javax.*` → `jakarta.*` | Medium |
-| `jbpm-work-items` | Spring Boot 3.x | Security/Web MVC API changes | Medium |
-| `process-migration-service` | WildFly 35 + Cargo container ID | Integration test config | Low |
-| `kie-wb-common` | None (inherits BOM) | PicketLink removal; Errai CDI 4.1 compat | 🔴 High |
-| `appformer` | None (inherits BOM) | PicketLink removal; Errai CDI 4.1 compat | 🔴 High |
-| `drools-wb` | None (inherits BOM) | PicketLink removal; Errai CDI 4.1 compat | 🔴 High |
-| `jbpm-wb` | None (inherits BOM) | Errai CDI 4.1 compat | High |
-| `kie-wb-distributions` | None (inherits BOM) | Keycloak adapter removal; descriptors | High |
-| `jbpm` | None (inherits BOM) | Keycloak adapter; `persistence.xml` v3.2 | Medium |
+| `droolsjbpm-build-bootstrap` | ✅ Done — all version bumps applied (⚠️ `jakarta.persistence-api` still at 3.1.0) | None (BOM only) | Low |
+| `droolsjbpm-integration` | ✅ Spring Boot 3.x done; Camel removal done | Namespace done; Security API done; Camel subsystem removed | ✅ Addressed |
+| `droolsjbpm-knowledge` | ✅ Spring Boot 3.x done | Archetype template `javax.*` → `jakarta.*` done | ✅ Addressed |
+| `jbpm-work-items` | ✅ Spring Boot 3.x done | Security/Web MVC API changes done | ✅ Addressed |
+| `process-migration-service` | ✅ WildFly 35 + Cargo container ID done | Integration test config done | ✅ Done |
+| `kie-wb-common` | None (inherits BOM) | PicketLink removal; Errai CDI 4.1 compat | 🔴 High (ongoing) |
+| `appformer` | None (inherits BOM) | PicketLink removal; Errai CDI 4.1 compat | 🔴 High (ongoing) |
+| `drools-wb` | None (inherits BOM) | PicketLink removal; Errai CDI 4.1 compat | 🔴 High (ongoing) |
+| `jbpm-wb` | None (inherits BOM) | Errai CDI 4.1 compat | High (ongoing) |
+| `kie-wb-distributions` | None (inherits BOM) | Keycloak adapter removal; descriptors | High (ongoing) |
+| `jbpm` | None (inherits BOM) | Keycloak adapter; `persistence.xml` v3.1 | Medium (ongoing) |

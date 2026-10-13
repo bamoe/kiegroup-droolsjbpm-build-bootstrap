@@ -60,9 +60,9 @@
 | `org.jboss.weld.weld-api` | 3.1.SP3 | **5.0.SP3** | 5.0.x | ✅ Aligned |
 | `org.jboss.ejb.client` | 4.0.39.Final | **5.0.0.Final** | 5.0.x | ✅ Aligned |
 | `org.infinispan` | 14.0.27.Final | **15.0.20.Final** | **15.0.x** | ✅ Aligned |
-| `org.keycloak` | 20.0.3 | **20.0.3** | **24.0.x** | ❌ Must upgrade to 24.x |
+| `org.keycloak` | 20.0.3 | **26.6.4** | **24.0.x** | ✅ Done (upgraded past 24.x) |
 | `io.undertow` | 2.2.38.Final | **2.3.24.Final** | **2.3.x** | ✅ Aligned |
-| `org.eclipse.jetty` | 9.4.57 | **11.0.26** | _not embedded_ | ⚠️ Jetty used standalone only |
+| `org.eclipse.jetty` | 9.4.57 | **12.1.10** | _not embedded_ | ✅ Aligned (Jetty used standalone only) |
 | `org.apache.cxf` | 3.6.8 | **4.2.2** | 4.1.x | ✅ Compatible (minor gap) |
 | `org.jboss.remoting` | 5.0.30.Final | **5.0.30.Final** | 5.0.x | ✅ Aligned |
 | `org.glassfish.jaxb` (JAXB RI) | 2.3.2 | **4.0.5** | 4.0.x | ✅ Aligned |
@@ -88,24 +88,24 @@
 | Property | Current | EAP 8.1 target | Action |
 |---|---|---|---|
 | `version.io.quarkus` | 3.20.6 | 3.x (LTS) | ✅ Compatible |
-| `version.org.wildfly` (test profile) | **23.0.2.Final** | **35.0.1.Final** | ❌ Must update to 35.x |
-| Cargo `wildfly23x` container ID | `wildfly23x` | `wildfly35x` | ❌ Must update container ID |
-| `cargo.container.id` | `wildfly23x` | `wildfly35x` | ❌ Update in `process-migration-service/pom.xml` |
+| `version.org.wildfly` (test profile) | **35.0.1.Final** | **35.0.1.Final** | ✅ Done |
+| Cargo `wildfly35x` container ID | `wildfly35x` | `wildfly35x` | ✅ Done |
+| `cargo.container.id` | `wildfly35x` | `wildfly35x` | ✅ Done — updated in `process-migration-service/pom.xml` |
 
 ---
 
 ## 6. Spring-based Modules (droolsjbpm-integration, jbpm)
 
-Spring Boot 2.7.x uses `jakarta.*` namespaces only from 3.x. The current lock at 2.7.18 is **incompatible** with EAP 8.1-level Jakarta EE 10 APIs when deploying WAR files to EAP 8.1.
+Spring Boot 3.x (with `jakarta.*` namespaces) is now in use across all modules that previously used Spring Boot 2.7.x.
 
-| Property | Current | EAP 8.1 target | Breaking |
+| Property | Current | EAP 8.1 target | Status |
 |---|---|---|---|
-| `org.springframework.boot` | **2.7.18** | **3.3.x** | ❌ Major — `javax.` → `jakarta.` in Spring 3.x |
-| `org.springframework` | **5.3.39** | **6.1.x** | ❌ Major |
-| `org.springframework.security.web` | **5.7.14** | **6.3.x** | ❌ Major |
-| `org.apache.tomcat` (embedded in Spring) | 10.1.56 (jakarta) | 10.1.x / 11.x | ⚠️ Review servlet API level |
+| `org.springframework.boot` | **3.5.16** | **3.3.x** | ✅ Done |
+| `org.springframework` | **6.2.19** | **6.1.x** | ✅ Done |
+| `org.springframework.security.web` | **6.5.11** | **6.3.x** | ✅ Done |
+| `org.apache.tomcat` (embedded in Spring) | **10.1.60** (jakarta) | 10.1.x / 11.x | ✅ Jakarta-compatible |
 
-> **Important:** Spring Boot 3.x requires Java 17+ and uses `jakarta.*` throughout — aligns with EAP 8.1. Upgrade path: `2.7 → 3.3` involves significant API changes in auto-configuration, security, and data access.
+> **Note:** Spring Boot 3.x uses `jakarta.*` throughout and requires Java 17+ — fully aligned with EAP 8.1. The upgrade from 2.7 to 3.x introduced significant API changes in auto-configuration, security, and data access that have been addressed in the relevant modules.
 
 ---
 
@@ -113,9 +113,9 @@ Spring Boot 2.7.x uses `jakarta.*` namespaces only from 3.x. The current lock at
 
 | Library | Current | Required for EAP 8.1 | Risk |
 |---|---|---|---|
-| `org.jboss.errai` | 4.19.0-SNAPSHOT | No official EE 10 release | 🔴 **High** — Errai is not maintained for Jakarta EE 10; GWT integration may be abandoned |
+| `org.jboss.errai` | 5.0.0-SNAPSHOT | No official EE 10 release | 🔴 **High** — Errai 5.x is still a SNAPSHOT targeting Jakarta EE 10; GWT integration stability is uncertain |
 | `org.wildfly.camel` | 11.0.1 | Not supported in WF 35 | 🔴 **High** — Camel subsystem dropped after WF 26 |
-| `org.keycloak` adapter | 20.0.3 | Keycloak 24+ uses OIDC adapters only; legacy WildFly adapter removed | 🔴 **High** — must migrate to `keycloak-servlet-oauth-client` or native OIDC |
+| `org.keycloak` adapter | ~~20.0.3~~ **26.6.4** | Keycloak 24+ uses OIDC adapters only; legacy WildFly adapter removed | ⚠️ Upgraded; verify OIDC adapter migration complete |
 | `org.apache.deltaspike.core` | 2.0.1 | CDI 4.0 compatible | ✅ OK |
 | `com.github.tomakehurst.wiremock` | replaced by `com.github.wiremock:3.13.2` | ✅ Done | ✅ |
 | `org.picketlink` | 2.7.1.Final | Not compatible with EE 10 | 🔴 **High** — PicketLink is EOL; replace with Elytron |
@@ -143,27 +143,24 @@ Spring Boot 2.7.x uses `jakarta.*` namespaces only from 3.x. The current lock at
 The following properties in `droolsjbpm-build-bootstrap/pom.xml` need updating:
 
 ```xml
-<!-- EAP 8.1 / WildFly 35 alignment — already done in pom.xml -->
-<!-- <version.org.infinispan>15.0.20.Final</version.org.infinispan>      ✅ Done -->
-<!-- <version.io.undertow>2.3.24.Final</version.io.undertow>             ✅ Done -->
-<version.org.keycloak>24.0.x</version.org.keycloak>                      <!-- ❌ still at 20.0.3 -->
-<!-- <version.jakarta.persistence-api>3.2.0</version.jakarta.persistence-api>            ✅ Done -->
-<!-- <version.jakarta.enterprise.cdi-api>4.1.0</version.jakarta.enterprise.cdi-api>      ✅ Done -->
-<!-- <version.jakarta.websocket-api>2.2.0</version.jakarta.websocket-api>                ✅ Done -->
+<!-- EAP 8.1 / WildFly 35 alignment — current pom.xml state -->
+<!-- <version.org.infinispan>15.0.20.Final</version.org.infinispan>                              ✅ Done -->
+<!-- <version.io.undertow>2.3.24.Final</version.io.undertow>                                     ✅ Done -->
+<!-- <version.org.keycloak>26.6.4</version.org.keycloak>                                         ✅ Done (upgraded past 24.x) -->
+<!-- <version.jakarta.persistence-api>3.1.0</version.jakarta.persistence-api>                    ⚠️  At 3.1.0; EAP 8.1 ships 3.2 — consider upgrading to 3.2.0 -->
+<!-- <version.jakarta.enterprise.cdi-api>4.1.0</version.jakarta.enterprise.cdi-api>              ✅ Done -->
+<!-- <version.jakarta.websocket-api>2.2.0</version.jakarta.websocket-api>                        ✅ Done -->
 <!-- <version.jakarta.enterprise.concurrent-api>3.1.1</version.jakarta.enterprise.concurrent-api> ✅ Done -->
-<version.jakarta.security.jacc-api>3.0.0</version.jakarta.security.jacc-api>             <!-- ❌ still absent/old -->
-<!-- <version.wildfly.jar.maven.plugin>13.0.0.Final</version.wildfly.jar.maven.plugin>   ✅ Done -->
-<!-- <version.wildfly.maven.plugin>5.1.5.Final</version.wildfly.maven.plugin>            ✅ Done -->
+<!-- <version.jakarta.authorization.api>3.0.0</version.jakarta.authorization.api>                ✅ Done (replaces jacc-api) -->
+<!-- <version.wildfly.jar.maven.plugin>13.0.0.Final</version.wildfly.jar.maven.plugin>           ✅ Done -->
+<!-- <version.wildfly.maven.plugin>5.1.5.Final</version.wildfly.maven.plugin>                    ✅ Done -->
 
-<!-- Spring 3.x (major upgrade, breaks API — still pending) -->
-<version.org.springframework>6.1.x</version.org.springframework>
-<version.org.springframework.boot>3.3.x</version.org.springframework.boot>
-<version.org.springframework.security.web>6.3.x</version.org.springframework.security.web>
+<!-- Spring 3.x upgrade — DONE -->
+<!-- <version.org.springframework>6.2.19</version.org.springframework>                           ✅ Done -->
+<!-- <version.org.springframework.boot>3.5.16</version.org.springframework.boot>                 ✅ Done -->
+<!-- <version.org.springframework.security.web>6.5.11</version.org.springframework.security.web> ✅ Done -->
 
-<!-- process-migration-service/pom.xml only -->
-<version.org.wildfly>35.0.1.Final</version.org.wildfly>
+<!-- process-migration-service/pom.xml — DONE -->
+<!-- <version.org.wildfly>35.0.1.Final</version.org.wildfly>                                     ✅ Done -->
+<!-- cargo.container.id = wildfly35x                                                              ✅ Done -->
 ```
-
-Additionally, in `process-migration-service/pom.xml`:
-- Change `cargo.container.id` from `wildfly23x` to `wildfly35x`
-- Replace `wildfly-arquillian-container` references to use version `5.1.0.Final`

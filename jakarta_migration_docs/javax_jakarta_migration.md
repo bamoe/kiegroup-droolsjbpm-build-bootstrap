@@ -23,7 +23,7 @@ This is the BOM/parent POM repository. All changes are in `pom.xml` (property ve
 | `version.jakarta.inject-api` | `1.0.3` | `2.0.1` |
 | `version.jakarta.jms-api` | `2.0.3` | `3.1.0` |
 | `version.jakarta.mail-api` | `1.6.8` | `2.1.5` |
-| `version.jakarta.persistence-api` | `2.2.3` | `3.2.0` |
+| `version.jakarta.persistence-api` | `2.2.3` | `3.1.0` |
 | `version.jakarta.resource-api` | `1.7.4` | `2.1.0` |
 | `version.jakarta.servlet-api` | `4.0.3` | `6.1.0` |
 | `version.jakarta.servlet.jsp-api` | `2.3.6` | `3.1.1` |
@@ -54,18 +54,18 @@ This is the BOM/parent POM repository. All changes are in `pom.xml` (property ve
 | `version.org.jboss.narayana.tomcat` | `5.9.0.Final` | `7.0.2.Final` |
 | `version.org.jboss.ejb.client` | `4.0.39.Final` | `5.0.0.Final` |
 | `version.org.jboss.logging.jboss-logging` | `3.4.1.Final` | `3.6.1.Final` |
-| `version.org.apache.tomcat` | `9.0.111` | `10.1.56` |
+| `version.org.apache.tomcat` | `9.0.111` | `10.1.60` |
 | `version.org.apache.tomcat.tomcat-dbcp` | `9.0.111` | _removed_ (absorbed into `version.org.apache.tomcat`) |
 | `version.org.apache.deltaspike.core` | `1.9.4` | `2.0.1` |
 | `version.org.eclipse.jdt` | `3.18.0` | `3.33.0` |
-| `version.org.eclipse.jetty` | `9.4.57.v20241219` | `11.0.26` |
+| `version.org.eclipse.jetty` | `9.4.57.v20241219` | `12.1.10` |
 | `version.org.eclipse.jgit` | `6.10.1.x` | `7.7.0.202606012155-r` |
 | `version.org.eclipse.sisu` | `0.3.5` | `1.0.1` |
 | `version.org.eclipse.parsson` | _(absent)_ | `1.1.9` |
 | `version.org.glassfish.jaxb` | `2.3.2` | `4.0.5` |
 | `version.org.javassist` | `3.26.0-GA` | `3.32.0-GA` |
 | `version.com.sun.xml.bind` | `2.3.0` | _removed_ (→ `org.glassfish.jaxb`) |
-| `version.com.fasterxml.jackson` | `2.18.6` | `2.20.0` |
+| `version.com.fasterxml.jackson` | `2.18.6` | `2.21.4` |
 | `version.com.fasterxml.jackson.annotations` | `${version.com.fasterxml.jackson}` | `2.22` |
 | `version.com.google.code.gson` | `2.8.9` | `2.11.0` |
 | `version.com.google.gwt` | `2.11.0` | `2.13.1` |
@@ -85,6 +85,33 @@ This is the BOM/parent POM repository. All changes are in `pom.xml` (property ve
 | `com.sun.jakarta.activation` | (new coords) | `2.0.1` |
 | `jakarta.validation` | `jakarta.validation-api` | `3.1.1` |
 | `org.eclipse.parsson` | `parsson` | `1.1.9` |
+
+
+#### Version properties added / updated
+
+| Property                                               | Change  | Old → New                     | Why                                                                                             |
+|--------------------------------------------------------|---------|-------------------------------|-------------------------------------------------------------------------------------------------|
+| `version.org.jboss.classfilewriter`                    | updated | `1.2.4.Final` → `1.3.0.Final` | Required by Weld 5 to emit Java 17-compatible bytecode with `StackMapTable`                     |
+| `version.org.jboss.weld.weld`                          | updated | `5.0.0.Final` → `5.1.7.Final` | Fixes WELD-2696: missing `StackMapTable` in CDI proxies, required by Java 17 bytecode verifier  |
+| `version.org.eclipse.jetty`                            | updated | `11.0.26` → `12.1.10`         | Jetty 12 adds Jakarta EE 10 servlet support                                                     |
+| `version.org.jboss.arquillian.container.weld.embedded` | updated | `4.0.0.Final` → `3.0.2.Final` | Arquillian container for Weld 5 / Jakarta CDI 4 (version aligned with weld-arquillian BOM)      |
+| `version.org.apache.activemq.artemis`                  | new     | — → `2.38.0`                  | Artemis replaces HornetQ (`javax.jms` → `jakarta.jms`) for JMS tests                            |
+| `version.org.openjdk.nashorn`                          | new     | — → `15.3`                    | Nashorn removed from JDK 15+; must be declared explicitly                                       |
+| `version.org.jboss.jandex`                             | updated | existing → `3.2.7`            | Jandex 3.x; managed under the `org.jboss.jandex` property name (not `io.smallrye`) in this BOM |
+| `version.jakarta.authorization.api`                    | new     | — → `3.0.0`                   | Was missing from BOM; jbpm root `pom.xml` had a version-less entry causing build failure        |
+
+#### `dependencyManagement` entries added
+
+| Artifact                                           | Why                                                                         |
+|----------------------------------------------------|-----------------------------------------------------------------------------|
+| `artemis-jakarta-server`, `artemis-jakarta-client` | Replaces HornetQ in all JMS tests; centrally managed to avoid version drift |
+| `arquillian-weld-embedded 3.0.2.Final`             | Updated Arquillian container artifact for Weld 5 / Jakarta CDI 4            |
+| `weld-lite-extension-translator`                   | New module split from `weld-core-impl` in Weld 5                            |
+| `nashorn-core`                                     | Standalone Nashorn for MVEL/scripting tests on JDK 17+                      |
+| `org.jboss.jandex:jandex 3.2.7`                   | Updated Jandex version; needed in distribution javadoc aggregate             |
+| `jakarta.authorization-api 3.0.0`                 | Was version-less in jbpm root pom — now properly versioned in BOM           |
+
+---
 
 ### Removed artifacts
 
@@ -114,7 +141,7 @@ No Java source files in this repository — it is a pure BOM/parent POM project.
 | Area | Risk |
 |---|---|
 | Hibernate 5 → 6 | `hibernate-entitymanager` removed; `SessionFactory` and `Criteria` API changed; `hbm.xml` mappings may need updating |
-| `jakarta.persistence-api` 2.2 → 3.1 | `persistence.xml` namespace must change to `https://jakarta.ee/xml/ns/persistence`, version `3.0` |
+| `jakarta.persistence-api` 2.2 → 3.1 | `persistence.xml` namespace must change to `https://jakarta.ee/xml/ns/persistence`, version `3.0`; note: BOM currently pins `3.1.0` (Jakarta Persistence 3.1), not `3.2.0` |
 | RESTEasy 3 → 6 | Package path `org.jboss.resteasy.plugins` unchanged but client API and multipart API changed |
 | Servlet API 4 → 6 | `jakarta.servlet` only; any `javax.servlet` references in WAR deployments will fail |
 | Weld 3 → 5 | CDI 4.0; `beans.xml` schema must reference `https://jakarta.ee/xml/ns/jakartaee`, version `4.0` |
