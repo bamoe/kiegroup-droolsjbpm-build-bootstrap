@@ -85,7 +85,7 @@
     <version.com.google.inject.guice>5.1.0</version.com.google.inject.guice>
     <version.com.google.gwt>2.13.1</version.com.google.gwt>
     <version.org.google.gwt-charts>0.9.9</version.org.google.gwt-charts>
-    <version.com.google.gwt.gwtmockito>2.0.0-SNAPSHOT</version.com.google.gwt.gwtmockito>
+    <version.org.kie.gwtmockito>2.0.0-SNAPSHOT</version.org.kie.gwtmockito>
     <version.com.google.jsinterop.base>1.0.0</version.com.google.jsinterop.base>
     <version.com.google.jsinterop.annotations>2.0.0</version.com.google.jsinterop.annotations>
     <version.com.google.protobuf>3.25.5</version.com.google.protobuf>
@@ -5891,9 +5891,9 @@
       </dependency>
 
       <dependency>
-        <groupId>com.google.gwt.gwtmockito</groupId>
+        <groupId>org.kie</groupId>
         <artifactId>gwtmockito</artifactId>
-        <version>${version.com.google.gwt.gwtmockito}</version>
+        <version>${version.org.kie.gwtmockito}</version>
         <exclusions>
           <exclusion>
             <groupId>org.mortbay.jasper</groupId>
