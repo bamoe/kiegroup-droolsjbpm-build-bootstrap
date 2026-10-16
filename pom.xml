@@ -153,7 +153,7 @@
     <version.org.apache.maven.wagon>3.5.3</version.org.apache.maven.wagon>
     <version.org.apache.neethi>3.2.4</version.org.apache.neethi>
     <version.org.apache.poi>5.4.1</version.org.apache.poi>
-    <version.org.apache.sshd>2.13.2</version.org.apache.sshd>
+    <version.org.apache.sshd>2.19.0</version.org.apache.sshd>
     <version.org.apache.tomcat>10.1.60</version.org.apache.tomcat>
     <version.org.apache.velocity>2.3</version.org.apache.velocity>
     <version.org.apache.xmlbeans>5.3.0</version.org.apache.xmlbeans>
@@ -4198,6 +4198,11 @@
         <version>${version.org.apache.poi}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.apache.sshd</groupId>
+        <artifactId>sshd-common</artifactId>
+        <version>${version.org.apache.sshd}</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.sshd</groupId>
         <artifactId>sshd-core</artifactId>
