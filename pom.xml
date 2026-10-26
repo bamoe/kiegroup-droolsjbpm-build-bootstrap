@@ -216,7 +216,7 @@
     <version.org.jboss.weld.weld-api>5.0.SP3</version.org.jboss.weld.weld-api>
     <version.org.jboss.arquillian.container.weld.embedded>3.0.2.Final</version.org.jboss.arquillian.container.weld.embedded>
     <!-- Artemis Jakarta JMS replaces HornetQ for Java 17 / Jakarta EE 10 tests -->
-    <version.org.apache.activemq.artemis>2.38.0</version.org.apache.activemq.artemis>
+    <version.org.apache.activemq.artemis>2.40.0</version.org.apache.activemq.artemis>
     <!-- Nashorn JS engine (removed from JDK 15+) -->
     <version.org.openjdk.nashorn>15.3</version.org.openjdk.nashorn>
     <version.com.sun.jakarta.mail>2.0.2</version.com.sun.jakarta.mail>
@@ -245,9 +245,10 @@
     <version.jakarta.servlet-api>6.1.0</version.jakarta.servlet-api>
     <version.jakarta.xml.bind-api>4.0.5</version.jakarta.xml.bind-api>
     <version.jakarta-regexp>1.4</version.jakarta-regexp>
+    <version.jakarta.json>2.0.1</version.jakarta.json>
+    <version.jakarta.json-api>2.1.3</version.jakarta.json-api>
     <version.jakarta.json.bind-api>3.0.0</version.jakarta.json.bind-api>
     <version.jakarta.jws-api>3.0.0</version.jakarta.jws-api>
-    <version.jakarta.json-api>2.1.3</version.jakarta.json-api>
     <version.jakarta.validation-api>3.1.1</version.jakarta.validation-api>
     <!-- GWT hard lock: Bean Validation 1.0 (javax.validation namespace) -->
     <version.javax.validation>1.0.0.GA</version.javax.validation>
@@ -335,7 +336,7 @@
     <!-- CXF's version is aligned with Jetty -->
     <version.org.apache.cxf>4.1.8</version.org.apache.cxf>
     <version.org.apache.camel>4.18.4</version.org.apache.camel>
-    <version.org.codehaus.cargo>1.9.3</version.org.codehaus.cargo>
+    <version.org.codehaus.cargo>1.10.29</version.org.codehaus.cargo>
     <version.org.freemarker>2.3.35</version.org.freemarker>
     <!-- Dependencies for selenium tests -->
     <version.org.jboss.arquillian.selenium>3.13.0</version.org.jboss.arquillian.selenium>
@@ -351,8 +352,13 @@
     <version.org.revapi>0.9.5</version.org.revapi>
     <version.org.revapi.java>0.14.3</version.org.revapi.java>
     <version.com.unboundid>4.0.5</version.com.unboundid>
-    <version.io.swagger.core.v3>2.2.52</version.io.swagger.core.v3>
-    <version.io.swagger.parser.v3>2.1.42</version.io.swagger.parser.v3>
+    <!-- swagger-core and swagger-parser-v3 must be kept in sync:
+         swagger-parser-v3 embeds swagger-core via its own dependencyManagement.
+         Mismatched versions cause BanDuplicateClasses failures (javax vs jakarta variants).
+         Compatible pairs: 2.1.45-2.1.47 -> 2.2.52 | 2.1.48 -> 2.2.53
+         Check https://github.com/swagger-api/swagger-parser for updates. -->
+    <version.io.swagger.core.v3>2.2.53</version.io.swagger.core.v3>
+    <version.io.swagger.parser.v3>2.1.48</version.io.swagger.parser.v3>
     <version.io.rest-assured>5.1.1</version.io.rest-assured>
     <version.org.jboss.byteman>4.0.27</version.org.jboss.byteman>
     <version.org.roboguice>3.0.1</version.org.roboguice>
@@ -815,6 +821,12 @@
                       <!-- Classes from gwt-user duplicated in errai-uibinder -->
                       <ignoreClass>com.google.gwt.uibinder.rebind.UiBinderWriter</ignoreClass>
                       <ignoreClass>com.google.gwt.uibinder.rebind.UiBinderGenerator</ignoreClass>
+                      <!-- Errai IoC ships its own jakarta.inject.Provider compat class, also present in jakarta.inject-api -->
+                      <ignoreClass>jakarta.inject.Provider</ignoreClass>
+                      <!-- Errai JAX-RS client ships its own GWT-compatible jakarta.ws.rs.core classes, also present in jakarta.ws.rs-api -->
+                      <ignoreClass>jakarta.ws.rs.core.Response*</ignoreClass>
+                      <ignoreClass>jakarta.ws.rs.core.MultivaluedMap</ignoreClass>
+                      <ignoreClass>jakarta.ws.rs.core.PathSegment</ignoreClass>
                       <!-- ignoring java 9 compatible class for modules -->
                       <ignoreClass>module-info</ignoreClass>
                       <!-- ignoring multirelease jar classes -->
@@ -833,6 +845,26 @@
                       <!-- This package contains auto generated code and is available both in kafka-clients
                       and in kafka-clients-test -->
                       <ignoreClass>org.apache.kafka.common.message.*</ignoreClass>
+                      <!-- Tomcat bundles its own copies of the Jakarta EE specs (tomcat-annotations-api,
+                           tomcat-servlet-api) which overlap with the standalone jakarta.annotation-api
+                           and jakarta.servlet-api artifacts. Both are intentional and required. -->
+                      <ignoreClass>jakarta.annotation.*</ignoreClass>
+                      <ignoreClass>jakarta.servlet.*</ignoreClass>
+                     <!-- narayana-jta is a shaded fat jar bundling common, arjuna, txoj and jta
+                           into itself while its published POM still declares them as transitive
+                           dependencies — all com.arjuna.* classes therefore appear twice. -->
+                      <ignoreClass>com.arjuna.*</ignoreClass>
+                      <!-- kie-server-router-proxy is a shaded fat jar that bundles smallrye-common-*
+                           into itself while its published POM still declares those artifacts as
+                           transitive dependencies — io.smallrye.common.* classes appear twice. -->
+                      <ignoreClass>io.smallrye.common.*</ignoreClass>
+                      <!-- swagger-core ships javax-based and jakarta-based artifact pairs:
+                           swagger-annotations / swagger-annotations-jakarta,
+                           swagger-models / swagger-models-jakarta,
+                           swagger-core / swagger-core-jakarta.
+                           Both variants end up on the classpath when swagger-parser-v3 is used,
+                           causing intentional duplicates across all io.swagger.v3.* packages. -->
+                      <ignoreClass>io.swagger.v3.*</ignoreClass>
                       <regexIgnoredClass>org.apache.sshd.common.io.*</regexIgnoredClass>
                       <regexIgnoredClass>org.apache.sshd.common.auth.*</regexIgnoredClass>
                     </ignoreClasses>
@@ -843,6 +875,9 @@
                         <artifactId>jakarta.json</artifactId>
                         <ignoreClasses>
                           <ignoreClass>javax.json.*</ignoreClass>
+                          <!-- org.glassfish:jakarta.json also bundles the jakarta.json.* spec API
+                               classes, which duplicate jakarta.json:jakarta.json-api -->
+                          <ignoreClass>jakarta.json.*</ignoreClass>
                         </ignoreClasses>
                       </dependency>
                       <!-- This JAR contains impl and is aligned with Jakarta spec JARs -->
@@ -853,12 +888,35 @@
                           <ignoreClass>javax.el.*</ignoreClass>
                         </ignoreClasses>
                       </dependency>
+                      <!-- tomcat-embed-el bundles the jakarta.el.* spec API classes,
+                           duplicating jakarta.el:jakarta.el-api. Both are required in
+                           Spring Boot embedded-Tomcat setups. -->
+                      <dependency>
+                        <groupId>org.apache.tomcat.embed</groupId>
+                        <artifactId>tomcat-embed-el</artifactId>
+                        <ignoreClasses>
+                          <ignoreClass>jakarta.el.*</ignoreClass>
+                        </ignoreClasses>
+                      </dependency>
                       <!-- This JAR contains reference impl and is only used on tests -->
                       <dependency>
                         <groupId>com.sun.activation</groupId>
                         <artifactId>jakarta.activation</artifactId>
                         <ignoreClasses>
                           <ignoreClass>javax.activation.*</ignoreClass>
+                          <!-- com.sun.activation:jakarta.activation also bundles jakarta.activation.*
+                               classes that duplicate jakarta.activation:jakarta.activation-api -->
+                          <ignoreClass>jakarta.activation.*</ignoreClass>
+                        </ignoreClasses>
+                      </dependency>
+                      <!-- docker-client:shaded is a fat-jar that embeds org.objectweb.asm (ASM) classes
+                           internally while org.ow2.asm:asm is also required on the classpath by Sisu
+                           for Plexus component scanning (e.g. MavenEmbedder). -->
+                      <dependency>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>docker-client</artifactId>
+                        <ignoreClasses>
+                          <ignoreClass>org.objectweb.asm.*</ignoreClass>
                         </ignoreClasses>
                       </dependency>
                       <!-- This JAR contains reference impl and is only used on tests -->
@@ -867,6 +925,18 @@
                         <artifactId>jakarta.mail</artifactId>
                         <ignoreClasses>
                           <ignoreClass>javax.mail.*</ignoreClass>
+                          <ignoreClass>jakarta.mail.*</ignoreClass>
+                        </ignoreClasses>
+                      </dependency>
+                      <!-- org.eclipse.angus:jakarta.mail is the successor impl to com.sun.mail:jakarta.mail;
+                           it bundles the jakarta.mail.* spec API classes (duplicating jakarta.mail-api)
+                           AND also bundles org.eclipse.angus.* impl classes (duplicating angus-mail). -->
+                      <dependency>
+                        <groupId>org.eclipse.angus</groupId>
+                        <artifactId>jakarta.mail</artifactId>
+                        <ignoreClasses>
+                          <ignoreClass>jakarta.mail.*</ignoreClass>
+                          <ignoreClass>org.eclipse.angus.*</ignoreClass>
                         </ignoreClasses>
                       </dependency>
                       <dependency>
@@ -2803,7 +2873,7 @@
       <dependency>
         <groupId>org.glassfish</groupId>
         <artifactId>jakarta.json</artifactId>
-        <version>${version.jakarta.json-api}</version>
+        <version>${version.jakarta.json}</version>
       </dependency>
       <dependency>
         <groupId>jakarta.jws</groupId>
