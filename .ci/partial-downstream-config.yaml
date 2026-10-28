@@ -8,8 +8,6 @@ version: "2.1"
 # We do not need to verify tests in upstream projects, since those do not risk to be broken by modifications in downstream ones; so, we use the default upstream command
 # On the other side, any downsteam repo could be broken by upstream modifications. In this case, we customize the downstream command on a per-repo base to match the current building status (NB/PB/FB) or the repo
 
-
-
 dependencies: ./project-dependencies.yaml
 
 pre: |
@@ -21,7 +19,7 @@ default:
   build-command:
     current: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu -T1C clean install -Dfull
     upstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -T1C clean install -Dfull -DskipTests -Dgwt.compiler.skip=true -Dgwt.skipCompilation=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
-    downstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true -Dmaven.test.redirectTestOutputToFile=true -Dgwt.compiler.localWorkers=1 -Dwebdriver.firefox.bin=/opt/tools/firefox-91esr/firefox-bin -Dgwt.skipCompilation=true
+    downstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dmaven.test.redirectTestOutputToFile=true -Dgwt.compiler.localWorkers=1 -Dwebdriver.firefox.bin=/opt/tools/firefox-91esr/firefox-bin -Dgwt.skipCompilation=true
     after:
       upstream: rm -rf ./*
 
@@ -56,12 +54,12 @@ build:
     build-command:
       current: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu -T1C clean install -Dfull
       upstream: mvn ${{ env.BUILD_MVN_OPTS }} -e clean install -DskipTests -Dgwt.compiler.skip=true -Dgwt.skipCompilation=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
-      downstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Pbusiness-central,wildfly,sourcemaps,no-showcase -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dcargo.ignore.failures=true -Dmaven.test.redirectTestOutputToFile=true -Dgwt.compiler.localWorkers=1 -Dwebdriver.firefox.bin=/opt/tools/firefox-91esr/firefox-bin -Dgwt.skipCompilation=true
+      downstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Pbusiness-central,wildfly,sourcemaps,no-showcase -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dmaven.test.redirectTestOutputToFile=true -Dgwt.compiler.localWorkers=1 -Dwebdriver.firefox.bin=/opt/tools/firefox-91esr/firefox-bin -Dgwt.skipCompilation=true
     archive-artifacts:
       path: |
         **/target/screenshots/**
   
-  # Override required to enable cargo integration tests (1:1 copy from full-downstream-build)
+  # Override required to enable cargo integration tests (1:1 copy from full-downstream-build) TODO: Tests failures are currently IGNORED
   - project: dba/kiegroup-droolsjbpm-integration
     build-command:
       current: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu -B -T1C clean install -Dfull -Pjenkins-pr-builder
