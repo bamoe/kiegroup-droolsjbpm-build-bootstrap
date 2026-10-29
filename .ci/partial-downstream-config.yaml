@@ -17,9 +17,9 @@ pre: |
 
 default:
   build-command:
-    current: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu -T1C clean install -Dfull
+    current: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu -T1C clean install -Dfull -Pwildfly,business-central
     upstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -T1C clean install -Dfull -DskipTests -Dgwt.compiler.skip=true -Dgwt.skipCompilation=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
-    downstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dmaven.test.redirectTestOutputToFile=true -Dgwt.compiler.localWorkers=1 -Dwebdriver.firefox.bin=/opt/tools/firefox-91esr/firefox-bin -Dgwt.skipCompilation=true
+    downstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Pwildfly,business-central -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dmaven.test.redirectTestOutputToFile=true -Dgwt.compiler.localWorkers=1 -Dwebdriver.firefox.bin=/opt/tools/firefox-91esr/firefox-bin -Dgwt.skipCompilation=true
     after:
       upstream: rm -rf ./*
 
