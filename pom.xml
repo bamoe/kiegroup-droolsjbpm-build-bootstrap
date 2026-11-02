@@ -346,7 +346,7 @@
     <version.org.jboss.errai>5.0.0.Final</version.org.jboss.errai>
     <version.com.google.elemental2>1.1.0</version.com.google.elemental2>
     <!-- Required by jboss-remoting version above -->
-    <version.org.ow2.asm>9.11</version.org.ow2.asm>
+    <version.org.ow2.asm>9.11.1</version.org.ow2.asm>
     <version.org.wildfly.security>2.6.12.Final</version.org.wildfly.security>
     <version.org.picketlink>2.7.1.Final</version.org.picketlink>
     <version.org.revapi>0.9.5</version.org.revapi>
