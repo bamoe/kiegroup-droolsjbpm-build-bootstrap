@@ -80,7 +80,7 @@
     <version.org.jresearch.gwt.time>2.0.11</version.org.jresearch.gwt.time>
     <version.domino-slf4j-logger>1.0.4</version.domino-slf4j-logger>
     <!-- failureaccess is required for karaf features.xml to expose com.google.common.util.concurrent.internal package -->
-    <version.com.google.guava>33.2.1-jre</version.com.google.guava>
+    <version.com.google.guava>33.7.2-jre</version.com.google.guava>
     <version.com.google.guava.failureaccess>1.0.1</version.com.google.guava.failureaccess>
     <version.com.google.inject.guice>5.1.0</version.com.google.inject.guice>
     <version.com.google.gwt>2.13.1</version.com.google.gwt>
@@ -342,7 +342,7 @@
     <version.org.jboss.arquillian.selenium>3.13.0</version.org.jboss.arquillian.selenium>
     <version.org.jboss.arquillian.extension.drone>2.5.6</version.org.jboss.arquillian.extension.drone>
     <version.org.jboss.arquillian.graphene>2.5.4</version.org.jboss.arquillian.graphene>
-    <version.com.google.guava.for-selenium>33.2.1-jre</version.com.google.guava.for-selenium>
+    <version.com.google.guava.for-selenium>33.7.2-jre</version.com.google.guava.for-selenium>
     <version.org.jboss.errai>5.0.0.Final</version.org.jboss.errai>
     <version.com.google.elemental2>1.1.0</version.com.google.elemental2>
     <!-- Required by jboss-remoting version above -->
