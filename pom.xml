@@ -338,6 +338,9 @@
     <version.org.apache.cxf>4.1.8</version.org.apache.cxf>
     <version.org.apache.camel>4.18.4</version.org.apache.camel>
     <version.org.codehaus.cargo>1.10.29</version.org.codehaus.cargo>
+    <!-- Overrides jboss-parent: version.surefire.plugin, version.failsafe.plugin and version.surefire-report.plugin all resolve to it.
+         Since 3.6.0, -DskipTests no longer skips failsafe (use -DskipITs). -->
+    <version.surefire>3.6.1</version.surefire>
     <version.org.freemarker>2.3.35</version.org.freemarker>
     <!-- Dependencies for selenium tests -->
     <version.org.jboss.arquillian.selenium>3.13.0</version.org.jboss.arquillian.selenium>
@@ -1264,6 +1267,14 @@
           <groupId>org.codehaus.cargo</groupId>
           <artifactId>cargo-maven3-plugin</artifactId>
           <version>${version.org.codehaus.cargo}</version>
+          <configuration>
+            <configuration>
+              <properties>
+                <!-- Default container heap; modules defining their own cargo.jvmargs override it -->
+                <cargo.jvmargs>-Xmx4g</cargo.jvmargs>
+              </properties>
+            </configuration>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -1282,7 +1293,7 @@
               <include>**/*IntegrationTest.java</include>
               <include>**/*IT.java</include>
             </includes>
-            <argLine>-Xmx1024m -Dfile.encoding=UTF-8</argLine>
+            <argLine>-Xmx4g -Dfile.encoding=UTF-8</argLine>
           </configuration>
         </plugin>
         <plugin>
