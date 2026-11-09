@@ -1,5 +1,4 @@
 version: "2.1"
-#fire commit
 
 # The scope of this build is to execute e2e and migration tests that also requires the productize profile
 # No unit tests, no integration tests, no checks

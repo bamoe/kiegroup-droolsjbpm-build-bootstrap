@@ -1,5 +1,4 @@
 version: "2.1"
-#fire commit
 
 # The scope of this build is to execute integration tests
 # No unit tests, no checks, no e2e/migration tests
@@ -22,9 +21,12 @@ version: "2.1"
 # -XX:TieredStopAtLevel=1 : use only the C1 (fast startup) compiler; short explanation: Tiered compilation contains both "C1 Client compiler" (fast start-up - short-lived execution) and "C2 server ccompiler" () long-lived process, performance optimization over time)
 ## for Maven build, we do not need both, only C1
 # -XX:+UseParallelGC
+##export MVN_TWEAKS=-T1C -Dparallel=all -DuseUnlimitedThreads=true -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true
+
+## As per version 3.6.0, userfire plugin should be disabled by skipTests, and that should be ignored by failsafe plugin
+## failsafe plugin should be disabled by skipITs, and that should be ignored by userfire plugin
 
 dependencies: ./project-dependencies.yaml
-##export MVN_TWEAKS=-T1C -Dparallel=all -DuseUnlimitedThreads=true -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true
 
 pre: |
   export MVN_TWEAKS=-T1C -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true

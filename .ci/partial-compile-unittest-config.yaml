@@ -1,5 +1,4 @@
 version: "2.1"
-#fire commit
 
 # The scope of this build is to execute unit tests and checks
 # No integration tests, no e2e, no migration tests, no productize profile
@@ -24,12 +23,15 @@ version: "2.1"
 # -XX:+UseParallelGC
 ##export MVN_TWEAKS=-T1C -Dparallel=all -DuseUnlimitedThreads=true -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true
 
+## As per version 3.6.0, userfire plugin should be disabled by skipTests, and that should be ignored by failsafe plugin
+## failsafe plugin should be disabled by skipITs, and that should be ignored by userfire plugin
+
 dependencies: ./project-dependencies.yaml
 
 pre: |
   export MVN_TWEAKS=-T1C
   export JVM_TWEAKS=-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC
-  export FLAGS=-Dgwt.compiler.skip=true -Dgwt.compiler.localWorkers=2
+  export FLAGS=-DskipITs -Dgwt.compiler.skip=true -Dgwt.compiler.localWorkers=2
   export BUILD_MVN_OPTS=${{ env.BUILD_MVN_OPTS }} ${{ env.MVN_TWEAKS }} ${{ env.FLAGS }} -Dmaven.resolver.transport=native -Daether.connector.http.connectionMaxTtl=25 -Daether.connector.http.retryHandler.count=2 -Daether.connector.requestTimeout=300000 -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss
   echo "BUILD_MVN_OPTS=${{ env.BUILD_MVN_OPTS }}"
   java -version
