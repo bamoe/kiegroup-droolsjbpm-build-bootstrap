@@ -4742,6 +4742,11 @@
         <artifactId>maven-resolver-connector-basic</artifactId>
         <version>${version.org.apache.maven.resolver}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.maven.resolver</groupId>
+        <artifactId>maven-resolver-named-locks</artifactId>
+        <version>${version.org.apache.maven.resolver}</version>
+      </dependency>
 
       <dependency>
         <groupId>org.eclipse.sisu</groupId>
