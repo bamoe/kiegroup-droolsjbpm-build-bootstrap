@@ -28,7 +28,7 @@ dependencies: ./project-dependencies.yaml
 pre: |
   export MVN_TWEAKS=-T1C
   export JVM_TWEAKS=-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC
-  export FLAGS= -Dproductize -DskipTests -Pno-showcase -Dgwt.compiler.localWorkers=2 -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
+  export FLAGS=-Dprofile -Dproductize -DskipTests -Pno-showcase -Dgwt.compiler.localWorkers=2 -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
   export BUILD_MVN_OPTS=${{ env.BUILD_MVN_OPTS }} ${{ env.MVN_TWEAKS }} ${{ env.FLAGS }}  -Dmaven.resolver.transport=native -Daether.connector.http.connectionMaxTtl=25 -Daether.connector.http.retryHandler.count=2 -Daether.connector.requestTimeout=300000 -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss
   echo "BUILD_MVN_OPTS=${{ env.BUILD_MVN_OPTS }}"
   echo "JVM_TWEAKS=${{ env.JVM_TWEAKS }}"
