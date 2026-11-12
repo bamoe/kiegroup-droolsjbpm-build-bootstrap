@@ -82,8 +82,8 @@ build:
   # Override required to enable cargo integration tests (1:1 copy from full-downstream-build) TODO: Tests failures are currently IGNORED
   - project: dba/kiegroup-droolsjbpm-integration
     build-command:
-      current: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Pbusiness-central,wildfly,sourcemaps,no-showcase,jenkins-pr-builder -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true -Dmaven.test.redirectTestOutputToFile=true  -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC"
-      downstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Pbusiness-central,wildfly,sourcemaps,no-showcase,jenkins-pr-builder -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true -Dmaven.test.redirectTestOutputToFile=true -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC"
+      current: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Pbusiness-central,wildfly,sourcemaps,no-showcase,jenkins-pr-builder -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dmaven.test.redirectTestOutputToFile=true  -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC"
+      downstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Pbusiness-central,wildfly,sourcemaps,no-showcase,jenkins-pr-builder -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dmaven.test.redirectTestOutputToFile=true -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC"
 
   # In full-downstream-config is skipped, but actually compiled in 8.1 
   # - project: dba/kiegroup-process-migration-service

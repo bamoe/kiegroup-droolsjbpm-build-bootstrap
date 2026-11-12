@@ -337,7 +337,7 @@
     <!-- CXF's version is aligned with Jetty -->
     <version.org.apache.cxf>4.1.8</version.org.apache.cxf>
     <version.org.apache.camel>4.18.4</version.org.apache.camel>
-    <version.org.codehaus.cargo>1.10.29</version.org.codehaus.cargo>
+    <version.org.codehaus.cargo>1.10.30</version.org.codehaus.cargo>
     <!-- Overrides jboss-parent: version.surefire.plugin, version.failsafe.plugin and version.surefire-report.plugin all resolve to it.
          Since 3.6.0, -DskipTests no longer skips failsafe (use -DskipITs). -->
     <version.surefire>3.6.1</version.surefire>
