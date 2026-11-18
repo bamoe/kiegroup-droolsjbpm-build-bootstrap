@@ -16,29 +16,29 @@ default:
       upstream: rm -rf ./*
 
 build:
-  - project: dba/kiegroup-gwtmockito
+  - project: bamoe/kiegroup-gwtmockito
     build-command:
       current: mvn clean install ${{ env.BUILD_MVN_OPTS }}
       downstream: mvn clean install ${{ env.BUILD_MVN_OPTS }}
       upstream: mvn -e clean install -DskipTests ${{ env.BUILD_MVN_OPTS }}
 
-  - project: dba/kiegroup-appformer
+  - project: bamoe/kiegroup-appformer
     build-command:
       upstream: mvn -e clean install -DskipTests -Dgwt.compiler.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true ${{ env.BUILD_MVN_OPTS }}
     archive-artifacts:
       path: |
         **/dashbuilder-runtime.war
 
-  - project: dba/kiegroup-drools
+  - project: bamoe/kiegroup-drools
     build-command:
       upstream: mvn -e clean install -DskipTests -Dgwt.compiler.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true ${{ env.BUILD_MVN_OPTS }}
 
-  - project: dba/kiegroup-optaplanner
+  - project: bamoe/kiegroup-optaplanner
     build-command:
       current: mvn -e -fae -nsu clean install -Dfull -DskipTests ${{ env.BUILD_MVN_OPTS }}
       upstream: mvn -e clean install -DskipTests -Dgwt.compiler.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true ${{ env.BUILD_MVN_OPTS }}
 
-  - project: dba/kiegroup-kie-wb-common
+  - project: bamoe/kiegroup-kie-wb-common
     build-command:
       current: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu -T1C clean install -Dfull -DskipTests
       upstream: mvn ${{ env.BUILD_MVN_OPTS }} -e clean install -DskipTests -Dgwt.compiler.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
@@ -47,17 +47,17 @@ build:
       path: |
         **/target/screenshots/**
 
-  - project: dba/kiegroup-droolsjbpm-integration
+  - project: bamoe/kiegroup-droolsjbpm-integration
     build-command:
       current: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu -B -T1C clean install -Dfull -Pjenkins-pr-builder -DskipTests
       downstream: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu clean install -Dfull -Pbusiness-central,wildfly,sourcemaps,no-showcase,jenkins-pr-builder -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true -Dmaven.test.redirectTestOutputToFile=true -Dgwt.compiler.localWorkers=1  -Dgwt.compiler.skip=true
 
-  - project: dba/kiegroup-process-migration-service
+  - project: bamoe/kiegroup-process-migration-service
     skip: true
 
-  - project: dba/kiegroup-kie-docs
+  - project: bamoe/kiegroup-kie-docs
     skip: true
 
-  - project: dba/kiegroup-droolsjbpm-tools
+  - project: bamoe/kiegroup-droolsjbpm-tools
     skip: true
 
