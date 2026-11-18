@@ -63,8 +63,8 @@ build:
   # This override is not required. However, removing it causes the CI build to hang indefinitely.
   - project: dba/kiegroup-jbpm
     build-command:
-      current: mvn -e -fae -nsu clean install -Dfull ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true
-      downstream: mvn -e -fae -nsu clean install -Dfull ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true
+      current: mvn -e -fae -nsu clean install -Dfull ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC"
+      downstream: mvn -e -fae -nsu clean install -Dfull ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC"
 
   # Optaplanner is NOT part of BAMOE project.
   # - project: dba/kiegroup-optaplanner
