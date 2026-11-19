@@ -1,0 +1,42 @@
+name: E2E Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
+    paths-ignore:
+      - 'LICENSE*'
+      - '.gitignore'
+      - '*.md'
+      - '*.txt'
+      - 'docs/**'
+      - 'ide-configuration/**'
+      - 'script/**'
+
+jobs:
+  build-chain:
+    concurrency:
+      group: e2e-checks-${{ github.head_ref }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    name: Build chain (e2e)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Java and Maven Setup
+        uses: ./.ci/actions/maven
+        with:
+          java-version: 17
+          maven-version: 3.9.9
+          cache-key-prefix: ${{ runner.os }}-17-maven3.9.9
+      - name: Build Chain
+        uses: ./.ci/actions/build-chain
+        with:
+          definition-file: ./.ci/partial-compile-e2e-config.yaml
+          flow-type: branch
+          starting-project: bamoe/kiegroup-kie-soup
+          additional-flags: --branch 7.81.x-blue-jakarta
+          annotations-prefix: ${{ runner.os }}-17/3.9.9
+          github-token: "${{ secrets.SOURCE_REPO_TOKEN }}"
+      - name: Surefire Report
+        uses: ./.ci/actions/surefire-report
+        if: ${{ always() }}
