@@ -33,7 +33,7 @@ jobs:
         with:
           definition-file: ./.ci/partial-compile-unit-test-config.yaml
           flow-type: full_downstream
-          starting-project: bamoe/droolsjbpm-build-bootstrap
+          starting-project: bamoe/kiegroup-droolsjbpm-build-bootstrap
           additional-flags: --branch 7.81.x-blue-jakarta
           annotations-prefix: ${{ runner.os }}-17/3.9.9
           github-token: "${{ secrets.SOURCE_REPO_TOKEN }}"
