@@ -15,41 +15,41 @@ default:
       upstream: rm -rf ./*
 
 build:
-  - project: dba/kiegroup-gwtmockito
+  - project: bamoe/kiegroup-gwtmockito
     build-command:
       current: mvn clean install ${{ env.BUILD_MVN_OPTS }}
       downstream: mvn clean install ${{ env.BUILD_MVN_OPTS }}
       upstream: mvn -e clean install -DskipTests ${{ env.BUILD_MVN_OPTS }}
 
-  - project: dba/kiegroup-appformer
+  - project: bamoe/kiegroup-appformer
     build-command:
       upstream: mvn -e clean install -DskipTests -Dgwt.compiler.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true ${{ env.BUILD_MVN_OPTS }}
     archive-artifacts:
       path: |
         **/dashbuilder-runtime.war
 
-  - project: dba/kiegroup-drools
+  - project: bamoe/kiegroup-drools
     build-command:
       upstream: mvn -e clean install -DskipTests -Dgwt.compiler.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true ${{ env.BUILD_MVN_OPTS }}
 
-  - project: dba/kiegroup-optaplanner
+  - project: bamoe/kiegroup-optaplanner
     build-command:
       current: mvn -e clean install -nsu -Prun-code-coverage,wildfly -Dfull  -Dintegration-tests=true -Dmaven.test.failure.ignore=true ${{ env.BUILD_MVN_OPTS }}
       upstream: mvn -e clean install -DskipTests -Dgwt.compiler.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true ${{ env.BUILD_MVN_OPTS }}
 
-  - project: dba/kiegroup-jbpm
+  - project: bamoe/kiegroup-jbpm
     archive-artifacts:
       path: |
         **/jbpm-container-test/**/*.log
 
-  - project: dba/kiegroup-droolsjbpm-integration
+  - project: bamoe/kiegroup-droolsjbpm-integration
     build-command:
       current: mvn -e -nsu -Dfull -Pwildfly clean install -Pjenkins-pr-builder -Prun-code-coverage  -Dcontainer.profile=wildfly -Dcontainer=wildfly -Dintegration-tests=true -Dmaven.test.failure.ignore=true ${{ env.BUILD_MVN_OPTS }}
     archive-artifacts:
       path: |
         **/gclog
 
-  - project: dba/kiegroup-kie-wb-common
+  - project: bamoe/kiegroup-kie-wb-common
     build-command:
       current: mvn ${{ env.BUILD_MVN_OPTS }} -e -nsu -Dfull clean install -Prun-code-coverage -Pwildfly -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dmaven.test.failure.ignore=true 
       upstream: mvn ${{ env.BUILD_MVN_OPTS }} -e clean install -DskipTests -Dgwt.compiler.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
@@ -57,17 +57,17 @@ build:
       path: |
         **/target/screenshots/**
 
-  - project: dba/kiegroup-jbpm-wb
+  - project: bamoe/kiegroup-jbpm-wb
     archive-artifacts:
       path: |
         **/target/jbpm-wb-case-mgmt-showcase*.war
         **/target/jbpm-wb-showcase.war
 
-  - project: dba/kiegroup-kie-docs
+  - project: bamoe/kiegroup-kie-docs
     build-command:
       current: mvn -e clean install -Dmaven.test.failure.ignore=true -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3
 
-  - project: dba/kiegroup-optaweb-employee-rostering
+  - project: bamoe/kiegroup-optaweb-employee-rostering
     build-command:
       current: mvn -e -nsu clean install -Dfull -Prun-code-coverage -Dintegration-tests=true -Dmaven.test.failure.ignore=true ${{ env.BUILD_MVN_OPTS }}
     archive-artifacts:
@@ -75,7 +75,7 @@ build:
         **/cypress/screenshots/**@always
         **/cypress/videos/**@always
 
-  - project: dba/kiegroup-optaweb-vehicle-routing
+  - project: bamoe/kiegroup-optaweb-vehicle-routing
     build-command:
       current: mvn -e -nsu clean install -Dfull -Prun-code-coverage -Dintegration-tests=true -Dmaven.test.failure.ignore=true ${{ env.BUILD_MVN_OPTS }}
     archive-artifacts:
@@ -83,7 +83,7 @@ build:
         **/cypress/screenshots/**@always
         **/cypress/videos/**@always
 
-  - project: dba/kiegroup-kie-wb-distributions
+  - project: bamoe/kiegroup-kie-wb-distributions
     build-command:
       current: mvn -e -nsu clean install -Dfull -Prun-code-coverage -Pwildfly -Dcontainer=wildfly -Dcontainer.profile=wildfly -Dintegration-tests=true -Dmaven.test.failure.ignore=true -Pbusiness-central -Dgwt.compiler.localWorkers=1 -Dwebdriver.firefox.bin=${{ env.FIREFOX_FOLDER }}/firefox-bin ${{ env.BUILD_MVN_OPTS }}
     archive-artifacts:
