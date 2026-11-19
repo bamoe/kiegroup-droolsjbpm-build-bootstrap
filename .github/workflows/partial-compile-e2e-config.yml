@@ -28,7 +28,7 @@ jobs:
           java-version: 17
           maven-version: 3.9.9
           cache-key-prefix: ${{ runner.os }}-17-maven3.9.9
-      - name: Build Chain
+      - name: Build Chain (e2e tests)
         uses: ./.ci/actions/build-chain
         with:
           definition-file: ./.ci/partial-compile-e2e-config.yaml
