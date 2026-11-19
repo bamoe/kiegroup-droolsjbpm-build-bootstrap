@@ -3,11 +3,11 @@ description: 'Java and Maven version setup'
 inputs:
   java-version:
     description: "the java version"
-    default: 11
+    default: 17
     required: false
   maven-version:
     description: "the maven version"
-    default: "3.8.1"
+    default: "3.9.16"
     required: false
   cache-key-prefix:
     description: "the cache key"
@@ -17,13 +17,13 @@ runs:
   using: "composite"
   steps:
     - name: Setup Maven And Java Version
-      uses: s4u/setup-maven-action@v1.2.1
+      uses: s4u/setup-maven-action@v1.8.0
       with:
         java-version: ${{ inputs.java-version }}
         maven-version: ${{ inputs.maven-version }}
     # See https://docs.github.com/en/actions/guides/building-and-testing-java-with-maven#caching-dependencies
     - name: Cache Maven packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path:  ~/.m2
         key: ${{ inputs.cache-key-prefix }}-m2-${{ hashFiles('**/pom.xml') }}
