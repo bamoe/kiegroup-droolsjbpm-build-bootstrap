@@ -290,7 +290,7 @@
     <version.org.springframework.security.web>6.5.11</version.org.springframework.security.web>
     <version.org.subethamail>1.2</version.org.subethamail>
     <version.org.subethamail.subethasmtp>3.1.6</version.org.subethamail.subethasmtp>
-    <version.org.testcontainers>1.20.4</version.org.testcontainers>
+    <version.org.testcontainers>1.21.4</version.org.testcontainers>
     <version.org.webjars.swagger-ui>5.32.15</version.org.webjars.swagger-ui>
     <version.org.webjars.npm.monaco-editor>0.20.0</version.org.webjars.npm.monaco-editor>
     <version.org.wildfly>35.0.1.Final</version.org.wildfly>
