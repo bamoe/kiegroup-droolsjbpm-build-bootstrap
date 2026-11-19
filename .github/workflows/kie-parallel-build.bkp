@@ -1,5 +1,6 @@
 name: kie-parallel-build
 
+#Fireing comment
 # Builds several github.com repos at the same time, one matrix job (own runner) per repo,
 # each with its own build command. Every job runs scripts/build-bootstrap.sh.
 on:

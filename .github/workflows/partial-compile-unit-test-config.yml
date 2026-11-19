@@ -18,7 +18,7 @@ jobs:
       group: compile-${{ github.head_ref }}
       cancel-in-progress: true
     runs-on: ubuntu-latest
-    name: Build chain (compile only)
+    name: Build chain (unit tests)
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,8 +32,8 @@ jobs:
         uses: ./.ci/actions/build-chain
         with:
           definition-file: ./.ci/partial-compile-unit-test-config.yaml
-          flow-type: branch
-          starting-project: bamoe/kiegroup-kie-soup
+          flow-type: full_downstream
+          starting-project: bamoe/kiegroup-droolsjbpm-build-bootstrap
           additional-flags: --branch 7.81.x-blue-jakarta
           annotations-prefix: ${{ runner.os }}-17/3.9.9
           github-token: "${{ secrets.SOURCE_REPO_TOKEN }}"
