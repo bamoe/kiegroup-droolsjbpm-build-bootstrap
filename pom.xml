@@ -211,8 +211,9 @@
     <version.org.jboss.remote-naming>2.0.5.Final</version.org.jboss.remote-naming>
     <version.org.jboss.remoting>5.0.32.Final</version.org.jboss.remoting>
     <version.org.jboss.ejb.client>5.0.0.Final</version.org.jboss.ejb.client>
+    <version.org.jboss.modules>2.1.6.Final</version.org.jboss.modules>
     <version.org.jboss.shrinkwrap>1.2.6</version.org.jboss.shrinkwrap>
-    <version.org.jboss.shrinkwrap.resolver>2.2.6</version.org.jboss.shrinkwrap.resolver>
+    <version.org.jboss.shrinkwrap.resolver>3.3.7</version.org.jboss.shrinkwrap.resolver>
     <version.org.jboss.weld.weld>5.1.7.Final</version.org.jboss.weld.weld>
     <version.org.jboss.weld.weld-api>5.0.SP3</version.org.jboss.weld.weld-api>
     <version.org.jboss.arquillian.container.weld.embedded>3.0.2.Final</version.org.jboss.arquillian.container.weld.embedded>
@@ -4739,6 +4740,11 @@
       <dependency>
         <groupId>org.apache.maven.resolver</groupId>
         <artifactId>maven-resolver-connector-basic</artifactId>
+        <version>${version.org.apache.maven.resolver}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.resolver</groupId>
+        <artifactId>maven-resolver-named-locks</artifactId>
         <version>${version.org.apache.maven.resolver}</version>
       </dependency>
 
