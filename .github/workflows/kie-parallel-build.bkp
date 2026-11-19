@@ -1,0 +1,103 @@
+name: kie-parallel-build
+
+# Builds several github.com repos at the same time, one matrix job (own runner) per repo,
+# each with its own build command. Every job runs scripts/build-bootstrap.sh.
+on:
+  workflow_dispatch:
+    inputs:
+      builds:
+        description: >-
+          JSON array, one object per repo: repo (required, org/name), command, branch,
+          prerequisites (comma-separated org/name built first inside that job). Missing command/branch use the defaults below.
+        default: >-
+          [{"repo":"bamoe/kiegroup-droolsjbpm-build-bootstrap","command":"mvn -B clean install -DskipTests"},
+          {"repo":"bamoe/kiegroup-lienzo-core","command":"mvn -B clean install -DskipTests -Dcheckstyle.skip"},
+          {"repo":"bamoe/kiegroup-kie-soup","command":"mvn -B -e clean install -DskipTests","prerequisites":"bamoe/kiegroup-droolsjbpm-build-bootstrap"}]
+      source-branch:
+        description: Default branch, used for entries without "branch"
+        default: 7.81.x-blue-jakarta
+      build-command:
+        description: Default build command, used for entries without "command"
+        default: mvn -B clean install -DskipTests
+      java-version:
+        description: SDKMAN Java identifier
+        default: 17.0.13-tem
+      maven-version:
+        description: Maven version
+        default: 3.9.9
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Validate builds and create matrix
+        id: matrix
+        env:
+          BUILDS: ${{ inputs.builds }}
+          DEFAULT_BRANCH: ${{ inputs.source-branch }}
+          DEFAULT_COMMAND: ${{ inputs.build-command }}
+        run: |
+          set -eo pipefail
+          # Fail early with a readable message if the input is not an array of objects with a repo.
+          echo "${BUILDS}" | jq -e '
+            type == "array" and length > 0 and length <= 256 and
+            all(.[]; type == "object" and (.repo | type == "string" and test("^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")))
+          ' > /dev/null || { echo "::error::builds must be a non-empty JSON array of objects, each with repo as org/name"; exit 1; }
+
+          matrix="$(echo "${BUILDS}" | jq -c \
+            --arg branch "${DEFAULT_BRANCH}" --arg command "${DEFAULT_COMMAND}" '
+            map({
+              repo: .repo,
+              branch: ((.branch // "") | if . == "" then $branch else . end),
+              command: ((.command // "") | if . == "" then $command else . end),
+              prerequisites: (.prerequisites // "")
+            })')"
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+          echo "${matrix}" | jq -r '.[] | "- \(.repo)@\(.branch): \(.command)" + (if .prerequisites != "" then "  (prerequisites: \(.prerequisites))" else "" end)' >> "$GITHUB_STEP_SUMMARY"
+
+  build:
+    needs: setup
+    name: build (${{ matrix.repo }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      # One failing repo must not cancel the others.
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.setup.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Do not leave the default GITHUB_TOKEN auth header in git config; it would
+          # conflict with the PAT used to clone the private source repo.
+          persist-credentials: false
+      - name: Clone and build ${{ matrix.repo }}
+        env:
+          # PAT with read access to the private source repos; GITHUB_TOKEN cannot read another account's repo.
+          GITHUB_COM_TOKEN: ${{ secrets.SOURCE_REPO_TOKEN }}
+          SOURCE_REPO: ${{ matrix.repo }}
+          PREREQUISITE_REPOS: ${{ matrix.prerequisites }}
+          SOURCE_BRANCH: ${{ matrix.branch }}
+          JAVA_VERSION: ${{ inputs.java-version }}
+          MAVEN_VERSION: ${{ inputs.maven-version }}
+          BUILD_COMMAND: ${{ matrix.command }}
+        run: bash scripts/build-bootstrap.sh
+
+  summary:
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Report result
+        env:
+          RESULT: ${{ needs.build.result }}
+        run: |
+          echo "### Parallel build result: ${RESULT}" >> "$GITHUB_STEP_SUMMARY"
+          [[ "${RESULT}" == "success" ]]

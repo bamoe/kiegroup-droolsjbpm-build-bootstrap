@@ -1,0 +1,49 @@
+name: kie-bootstrap-build
+
+# Clones and builds the source repo with scripts/build-bootstrap.sh.
+on:
+  workflow_dispatch:
+    inputs:
+      source-repo:
+        description: Source repo (org/name) on github.com
+        default: bamoe/kiegroup-droolsjbpm-build-bootstrap
+      prerequisite-repos:
+        description: "Optional, comma-separated org/name list built first, in order (e.g. bamoe/kiegroup-droolsjbpm-build-bootstrap for kie-soup)"
+        default: ""
+      source-branch:
+        description: Source branch
+        default: 7.81.x-blue-jakarta
+      java-version:
+        description: SDKMAN Java identifier
+        default: 17.0.13-tem
+      maven-version:
+        description: Maven version
+        default: 3.9.9
+      build-command:
+        description: Build command (from the source repo README)
+        default: mvn -B clean install -DskipTests
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Do not leave the default GITHUB_TOKEN auth header in git config; it would
+          # conflict with the PAT used to clone the private source repo.
+          persist-credentials: false
+      - name: Clone and build
+        env:
+          # PAT with read access to the private source repo; GITHUB_TOKEN cannot read another account's repo.
+          GITHUB_COM_TOKEN: ${{ secrets.SOURCE_REPO_TOKEN }}
+          SOURCE_REPO: ${{ inputs.source-repo }}
+          PREREQUISITE_REPOS: ${{ inputs.prerequisite-repos }}
+          SOURCE_BRANCH: ${{ inputs.source-branch }}
+          JAVA_VERSION: ${{ inputs.java-version }}
+          MAVEN_VERSION: ${{ inputs.maven-version }}
+          BUILD_COMMAND: ${{ inputs.build-command }}
+        run: bash scripts/build-bootstrap.sh
