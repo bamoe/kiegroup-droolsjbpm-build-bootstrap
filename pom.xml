@@ -870,6 +870,10 @@
                            Both variants end up on the classpath when swagger-parser-v3 is used,
                            causing intentional duplicates across all io.swagger.v3.* packages. -->
                       <ignoreClass>io.swagger.v3.*</ignoreClass>
+                      <!-- guice:classes is the no-AOP classifier variant of com.google.inject:guice,
+                           published alongside the regular jar. Both jars contain identical classes
+                           by design; the classifier variant is required by Maven embedder / Sisu. -->
+                      <ignoreClass>com.google.inject.*</ignoreClass>
                       <regexIgnoredClass>org.apache.sshd.common.io.*</regexIgnoredClass>
                       <regexIgnoredClass>org.apache.sshd.common.auth.*</regexIgnoredClass>
                     </ignoreClasses>
