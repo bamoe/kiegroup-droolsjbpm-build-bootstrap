@@ -34,6 +34,8 @@ pre: |
   export FLAGS=-Dprofile -DskipITs -Dgwt.compiler.skip=true -Dgwt.compiler.localWorkers=2
   export BUILD_MVN_OPTS=${{ env.BUILD_MVN_OPTS }} ${{ env.MVN_TWEAKS }} ${{ env.FLAGS }} -Dmaven.resolver.transport=native -Daether.connector.http.connectionMaxTtl=25 -Daether.connector.http.retryHandler.count=2 -Daether.connector.requestTimeout=300000 -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss
   echo "BUILD_MVN_OPTS=${{ env.BUILD_MVN_OPTS }}"
+  export BUILD_MVN_OPTS_NO_TWEAK=${{ env.BUILD_MVN_OPTS }} ${{ env.FLAGS }} -Dmaven.resolver.transport=native -Daether.connector.http.connectionMaxTtl=25 -Daether.connector.http.retryHandler.count=2 -Daether.connector.requestTimeout=300000 -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss
+  echo "BUILD_MVN_OPTS_NO_TWEAK=${{ env.BUILD_MVN_OPTS_NO_TWEAK }}"
   java -version
 
 default:
@@ -85,6 +87,13 @@ build:
     build-command:
       current: mvn ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
       downstream: mvn ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
+
+  # Override required to disable parallel build due to wildfly-maven-plugin
+  - project: bamoe/kiegroup-kie-wb-distributions
+    build-command:
+      current: mvn ${{ env.BUILD_MVN_OPTS_NO_TWEAK }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
+      downstream: mvn ${{ env.BUILD_MVN_OPTS_NO_TWEAK }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
+
 
   # In full-downstream-config is skipped, but actually compiled in 8.1 
   # - project: bamoe/kiegroup-process-migration-service
