@@ -94,6 +94,12 @@ build:
       current: mvn ${{ env.BUILD_MVN_OPTS_NO_TWEAK }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
       downstream: mvn ${{ env.BUILD_MVN_OPTS_NO_TWEAK }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
 
+  # Override required to disable parallel build due to different plugins
+  - project: bamoe/kiegroup-kie-wb-playground
+    build-command:
+      current: mvn ${{ env.BUILD_MVN_OPTS_NO_TWEAK }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
+      downstream: mvn ${{ env.BUILD_MVN_OPTS_NO_TWEAK }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
+
 
   # In full-downstream-config is skipped, but actually compiled in 8.1 
   # - project: bamoe/kiegroup-process-migration-service
