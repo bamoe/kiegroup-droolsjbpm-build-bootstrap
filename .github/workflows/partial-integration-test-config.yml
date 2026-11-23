@@ -36,7 +36,7 @@ jobs:
           starting-project: bamoe/kiegroup-droolsjbpm-build-bootstrap
           additional-flags: --branch 7.81.x-blue-jakarta
           annotations-prefix: ${{ runner.os }}-17/3.9.9
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.SOURCE_REPO_TOKEN }}"
       - name: Surefire Report
         uses: ./.ci/actions/surefire-report
         if: ${{ always() }}
