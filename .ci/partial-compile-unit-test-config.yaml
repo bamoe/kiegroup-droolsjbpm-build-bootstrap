@@ -1,5 +1,6 @@
 version: "2.1"
 
+# Firing comment
 # The scope of this build is to execute unit tests and checks
 # No integration tests, no e2e, no migration tests, no productize profile
 
