@@ -23,14 +23,19 @@ version: "2.1"
 # -XX:+UseParallelGC
 ##export MVN_TWEAKS=-T1C -Dparallel=all -DuseUnlimitedThreads=true -Dcargo.ignore.failures=true -Dmaven.test.failure.ignore=true
 
+## As per version 3.6.0, userfire plugin should be disabled by skipTests, and that should be ignored by failsafe plugin
+## failsafe plugin should be disabled by skipITs, and that should be ignored by userfire plugin
+
 dependencies: ./project-dependencies.yaml
 
 pre: |
   export MVN_TWEAKS=-T1C
   export JVM_TWEAKS=-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC
-  export FLAGS=-Dprofile -Dgwt.compiler.skip=true -Dgwt.compiler.localWorkers=2
+  export FLAGS=-Dprofile -DskipITs -Dgwt.compiler.skip=true -Dgwt.compiler.localWorkers=2
   export BUILD_MVN_OPTS=${{ env.BUILD_MVN_OPTS }} ${{ env.MVN_TWEAKS }} ${{ env.FLAGS }} -Dmaven.resolver.transport=native -Daether.connector.http.connectionMaxTtl=25 -Daether.connector.http.retryHandler.count=2 -Daether.connector.requestTimeout=300000 -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss
   echo "BUILD_MVN_OPTS=${{ env.BUILD_MVN_OPTS }}"
+  export BUILD_MVN_OPTS_NO_TWEAK=${{ env.BUILD_MVN_OPTS }} ${{ env.FLAGS }} -Dmaven.resolver.transport=native -Daether.connector.http.connectionMaxTtl=25 -Daether.connector.http.retryHandler.count=2 -Daether.connector.requestTimeout=300000 -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss
+  echo "BUILD_MVN_OPTS_NO_TWEAK=${{ env.BUILD_MVN_OPTS_NO_TWEAK }}"
   java -version
 
 default:
@@ -45,7 +50,7 @@ build:
   # This override shouldn't be required, added just to have 1:1 parity with full-downstream-build (enforcer, spotbug, checkstyle and revapi skips are not necessary, then have been removed)
   - project: bamoe/kiegroup-appformer
     build-command:
-      upstream: mvn ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e clean install -Dfull -DskipTests -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
+      upstream: mvn ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e clean install -Dfull -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
     archive-artifacts:
       path: |
         **/dashbuilder-runtime.war
@@ -53,7 +58,7 @@ build:
   # This override shouldn't be required, added just to have 1:1 parity with full-downstream-build (enforcer, spotbug, checkstyle and revapi skips are not necessary, then have been removed)
   - project: bamoe/kiegroup-drools
     build-command:
-      upstream: mvn ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e clean install -Dfull -DskipTests -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
+      upstream: mvn ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e clean install -Dfull -Denforcer.skip=true -Dcheckstyle.skip=true -Dspotbugs.skip=true -Drevapi.skip=true
 
   # This override is not required. However, removing it causes the CI build to hang indefinitely.
   - project: bamoe/kiegroup-jbpm
@@ -82,6 +87,19 @@ build:
     build-command:
       current: mvn ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
       downstream: mvn ${{ env.BUILD_MVN_OPTS }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
+
+  # Override required to disable parallel build due to wildfly-maven-plugin
+  - project: bamoe/kiegroup-kie-wb-distributions
+    build-command:
+      current: mvn ${{ env.BUILD_MVN_OPTS_NO_TWEAK }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
+      downstream: mvn ${{ env.BUILD_MVN_OPTS_NO_TWEAK }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
+
+  # Override required to disable parallel build due to different plugins
+  - project: bamoe/kiegroup-kie-wb-playground
+    build-command:
+      current: mvn ${{ env.BUILD_MVN_OPTS_NO_TWEAK }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
+      downstream: mvn ${{ env.BUILD_MVN_OPTS_NO_TWEAK }} -DargLine="-Xmx24G -XX:TieredStopAtLevel=1 -XX:+UseParallelGC" -e -nsu clean install -Dfull -Dmaven.test.redirectTestOutputToFile=true
+
 
   # In full-downstream-config is skipped, but actually compiled in 8.1 
   # - project: bamoe/kiegroup-process-migration-service
